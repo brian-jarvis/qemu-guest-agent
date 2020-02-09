@@ -111,6 +111,12 @@ spec:
         volumeMounts:
         - mountPath: /dev
           name: host-dev
+        - mountPath: /proc
+          name: host-proc
+        - mountPath: /etc/os-release
+          name: host-release
+        - mountPath: /etc/redhat-release
+          name: host-redhat-release
         resources:
           requests:
             cpu: 10m
@@ -139,6 +145,15 @@ spec:
       - hostPath:
           path: /dev
         name: host-dev
+      - hostPath:
+          path: /proc
+        name: host-proc
+      - hostPath:
+          path: /etc/os-release
+        name: host-release
+      - hostPath:
+          path: /etc/redhat-release
+        name: host-redhat-release
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
