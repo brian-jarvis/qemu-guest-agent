@@ -3,6 +3,7 @@
 ```
 $ oc create -f qemu-ga.yml
 $ oc adm policy add-scc-to-user privileged -n qemu-ga -z qemu-ga
+$ oc create -f qemu-ga-ds.yml
 ```
 or
 ```
