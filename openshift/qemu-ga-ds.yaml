@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: qemu-guest-agent
+  name: qemu-guest-agent
+  namespace: qemu-ga
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: qemu-guest-agent
+  template:
+    metadata:
+      labels:
+        app: qemu-guest-agent
+    spec:
+      containers:
+      - name: qemu-guest-agent
+        image: docker.io/jerryhan/qemu-guest-agent:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: host-dev
+            mountPath: /dev
+          - name: host-proc
+            mountPath: /proc
+          - name: host-etc-release
+            mountPath: /etc/os-release
+          - name: host-etc-release
+            mountPath: /etc/redhat-release
+        resources:
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        securityContext:
+          allowPrivilegeEscalation: true
+          privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+            - SYS_ADMIN
+            - SYS_RESOURCE
+            drop:
+            - ALL
+          readOnlyRootFilesystem: false
+      hostNetwork: true
+      hostPID: true
+      nodeSelector:
+        node.openshift.io/os_id: rhcos
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: qemu-ga
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: host-dev
+        hostPath:
+          path: /dev
+      - name: host-proc
+        hostPath:
+          path: /proc
+      - name: host-etc-release
+        hostPath:
+          path: /etc/os-release
+      - name: host-etc-redhatrelease
+        hostPath:
+          path: /etc/redhat-release
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
