@@ -1,4 +1,4 @@
-FROM centos
+FROM registry.access.redhat.com/ubi8/ubi
 
 LABEL summary="The QEMU Guest Agent" \
       io.k8s.description="This package provides an agent to run inside guests, which communicates with the host over a virtio-serial channel named 'org.qemu.guest_agent.0'" \
