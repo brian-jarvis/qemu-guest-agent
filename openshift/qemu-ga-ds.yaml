@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: qemu-guest-agent
-        image: docker.io/jerryhan/qemu-guest-agent:latest
+        image: quay.io/bjarvis/qemu-guest-agent:latest
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - name: host-dev
